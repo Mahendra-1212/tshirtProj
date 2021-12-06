@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='main.js'></script>
+	<style>
+	.card{
+	  width:700px;
+	  height:350px;
+	  background-color:#5587ab;
+	  text-align:center;
+	  color:white
+	}
+	.btn{
+	width: 218px;
+    height: 50px;
+    border-radius: 5px;
+    background-color: #d6e7e9;
+	}
+	</style>
+</head>
+<body>
+   <div class="card">
+   <h4>Password Reset Button</h4>
+   <a href="<%= token %>" ><button class="btn">Reset</button></a>
+   </div>
+</body>
+</html>
