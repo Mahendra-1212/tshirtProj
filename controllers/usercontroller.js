@@ -7,7 +7,7 @@ const {sendWelcomeMail,sendResetPasswordMail}=require("../utils/mailHalper");
 const crypto=require("crypto");
 const jwt=require("jsonwebtoken");
 console.log(Bigpromise);
-exports.signUp=Bigpromise(async (req,res)=>{
+exports.signUp=Bigpromise(async (req,res)=>{debugger;
     let result;
     let {email,user,password} =req.body;
     if(!email && !user && !password){
@@ -39,15 +39,19 @@ exports.signUp=Bigpromise(async (req,res)=>{
 });
 
 
-exports.login=Bigpromise(async function(req,res,next){
+exports.login=Bigpromise(async function(req,res,next){debugger;
   
        const {email,password}=req.body;
        if(!email && !password){
            return new Error("email and password is required");
        }
    const user=await User.findOne({email}).select("+password");
-   if(!user && !user.isValidatePassword(password)){
-       return new Error("email and password is incorrect");
+   const verify=await user.isValidatePassword(password);
+   if(!user || !verify){
+       return res.send({
+           "status":"failed",
+           "msg":"invalid username and password"
+       })
    }
    
    cookieSend(user,res);
@@ -122,6 +126,9 @@ const token1=await user.getJwt("10m");
 res.cookie("token",token1).render('resetPassword',{cookie:token1});
 });
 
+
+
+
 exports.passwordReset=Bigpromise(async function(req,res){debugger;
     const {pass,cpass,token}=req.body;
     const id=jwt.verify(token,process.env.JWT_SECRET);
@@ -144,3 +151,110 @@ user.forgotPasswoadExpireDate=undefined;
 await user.save();
 cookieSend(user,res);
 });
+
+// user deshboard controller
+
+exports.userDashBoard=Bigpromise((req,res)=>{
+    res.status(200).send(req.user);
+});
+
+
+// password update controller
+
+exports.updatePassword=Bigpromise(async (req,res,next)=>{
+    const {oldpass,newpass}=req.body;
+    const user=await User.findOne({email:req.user.email}).select("+password");
+    const verify=await user.isValidatePassword(oldpass);
+    if(!oldpass || !newpass || (newpass===oldpass) || !user || (!verify)){
+           return res.status(401).send({
+               "status":"fail",
+               "msg":"invalid user"
+           })
+    }
+    user.password=newpass;
+    await user.save();
+    res.status(200).send({
+      "status":"success",
+      "msg":"successfully updated "
+    });
+});
+
+exports.updateData=Bigpromise(async (req,res)=>{debugger;
+
+    const {email,user}=req.body;
+    const user1=await User.findOne({email:req.user.email}).select("+password");
+    if(!req.user|| !user1){
+        res.status(401).json({
+            "status":"failed"
+        });
+    }
+    user1.email=email || user1.email;
+    user1.user=user || user1.user;
+    await user1.save();
+    res.status(200).json({
+        "status":"success",
+        "mgs":"Data updated"
+    })
+
+     
+});
+
+exports.adminGetAlluser=Bigpromise(async (req,res,next)=>{debugger;
+    
+    const users=await User.find({role:"user"});
+    if(!users){
+        res.status(400).json({
+          status:"failed"
+        });
+       
+    }
+    res.status(200).json({
+        status:"true",
+        users:users
+    })
+
+});
+
+exports.adminUpdateUser=Bigpromise(async (req,res,next)=>{debugger;
+     
+    const id=req.query.id;
+    const {email,name}=req.body;
+    const user=await User.findOne({_id:id,role:"user"});
+    if(!user){
+        res.status(401).json({
+            "status":"failed"
+        })
+    }
+    user.email=email||user.email;
+    //user.password=password||user.password;
+    user.user=name||user.user;
+    await user.save();
+   res.status(200).json({
+       status:"success"
+   })
+
+});
+
+exports.adminDeleteUser=Bigpromise(async (req,res,next)=>{debugger;
+    const id=req.query.id;
+    const user=await User.findOne({_id:id});
+    const imgres=await cloudinary.uploader.destroy(user.photos.id);
+    if(!user && !imgres){
+        res.status(401).json({
+            status:"failed",
+            msg:"Invalid user"
+        })
+    }
+    await User.deleteOne({_id:id,role:"user"}).then(function(result){
+           res.status(200).json({
+               status:"success",
+               result:result
+           })
+           }).catch(function(e){
+            res.status(401).json({
+                status:"failed",
+                msg:"Invalid user"
+            })
+           })
+    
+})
