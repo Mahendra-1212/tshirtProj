@@ -6,6 +6,7 @@ const fileupload=require("express-fileupload");
 require("dotenv").config();
 const homeroute=require("./routes/homeroute");
 const userroute=require("./routes/userroute");
+const productroute=require("./routes/productroute");
 //above all is for imported files
 app.use(morgan("tiny")); 
 //regular middleware
@@ -30,9 +31,10 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 //below code is for home route
 app.use("/api/v1",homeroute);
 app.use("/api/v1",userroute);
+app.use("/api/v1",productroute);
 app.get("/dummy",function(req,res){
     res.render("signup");
-})
+});
 
 //exporting app
 module.exports=app;
