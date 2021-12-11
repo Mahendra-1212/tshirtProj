@@ -4,6 +4,7 @@ const PORT=process.env.PORT;
 const dbConnection=require("./config/db");
 const cloudinary=require("cloudinary").v2;
 dbConnection();
+console.log("changes done");
 cloudinary.config({
     api_key:process.env.CLOUDINARY_API_KEY,
     api_secret:process.env.CLOUDINARY_API_SECRET,
