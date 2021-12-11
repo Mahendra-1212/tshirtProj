@@ -40,10 +40,6 @@ const product=new mongoose.Schema(  {
         type:String,
         required:[true,"please add a brand for clothing"]
     },
-    rating:{
-        type:Number,
-        default:true
-    },
     numberOfReviews:{
         type:Number,
         default:0
@@ -57,17 +53,17 @@ const product=new mongoose.Schema(  {
             },
             name:{
                 tyep:String
+            },
+            rating:{
+                type:String,
+                required:true
+            },
+            comment:{
+                type:String,
+                required:true
             }
         }
     ],
-    rating:{
-        type:String,
-        required:true
-    },
-    comment:{
-        type:String,
-        required:true
-    },
     user:{
         type:mongoose.Schema.ObjectId,
         ref:"user",
