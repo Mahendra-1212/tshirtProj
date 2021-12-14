@@ -15,4 +15,5 @@ router.route("/updateProduct/:id").put(IsLoggiedIn,roleCheck("admin"),updateProd
 router.route("/deleteProduct/:id").delete(IsLoggiedIn,roleCheck("admin"),deleteProduct);
 router.route("/updateReview").put(IsLoggiedIn,updateReviews);
 
+
 module.exports=router;
