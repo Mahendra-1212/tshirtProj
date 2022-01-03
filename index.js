@@ -6,7 +6,7 @@ const cloudinary=require("cloudinary").v2;
 const logger=require("./controllers/logController");
 dbConnection();
 console.log("changes done");console.log("db connected successfully");
-logger.info("server started");
+
 
 
 
@@ -18,4 +18,5 @@ cloudinary.config({
 });
 app.listen(PORT,()=>{
     console.log(`server running on port ${PORT}`);
+    logger.info(`server started at port ${PORT}`);
 });

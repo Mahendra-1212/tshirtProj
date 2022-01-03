@@ -6,16 +6,22 @@ const {cookieSend}=require("../utils/jwtHelper");
 const {sendWelcomeMail,sendResetPasswordMail}=require("../utils/mailHalper");
 const crypto=require("crypto");
 const jwt=require("jsonwebtoken");
+const logger=require("../controllers/logController");
 console.log(Bigpromise);
 exports.signUp=Bigpromise(async (req,res)=>{debugger;
+    logger.info(`signUp controller is called`);
     let result;
     let {email,user,password} =req.body;
+    logger.info(`signUp controller user data ${email}`); 
     if(!email && !user && !password){
+        logger.info(`email ,user and password are missing`);
         return new Error("email, name and Password required");
     }
     if(req.files){
         let file=req.files.photo.tempFilePath;
+        logger.info(`adding photos on cloudinary ${file}`);
         result=await cloudinary.uploader.upload(file,{folder:'user',crop:"scale",width:150});
+        logger.info(`signup photo updated successfully in to cloudinary`);
     }
  let user1= await User.create({email,user,password
      ,photos:{
@@ -23,8 +29,10 @@ exports.signUp=Bigpromise(async (req,res)=>{debugger;
          url:result.secure_url
      }
 });
+logger.info(`signUp controller all data imported in to DB`);
    await sendWelcomeMail(user1.email);
-         cookieSend(user1,res);
+   logger.info(`signUp welcome mail sent to user`);
+    cookieSend(user1,res);
   /* let token= await user1.getJwt();
   console.log(token); 
   let options={
@@ -256,5 +264,7 @@ exports.adminDeleteUser=Bigpromise(async (req,res,next)=>{debugger;
                 msg:"Invalid user"
             })
            })
-    
 });
+
+
+
