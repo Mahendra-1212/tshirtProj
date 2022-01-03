@@ -3,9 +3,10 @@ const app=require("./app");
 const PORT=process.env.PORT;
 const dbConnection=require("./config/db");
 const cloudinary=require("cloudinary").v2;
+const logger=require("./controllers/logController");
 dbConnection();
 console.log("changes done");console.log("db connected successfully");
-
+logger.info("server started");
 
 
 
