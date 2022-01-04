@@ -1,0 +1,23 @@
+[info]: 2022-01-04T08:10:07.301Z deleteCartProd method product is called
+[info]: 2022-01-04T08:10:07.302Z get information mahendrasahu1212@gmail.com 61b4d88580b9ad1420ec3161
+[info]: 2022-01-04T08:10:07.683Z query findOne is called and get object {
+  _id: new ObjectId("61d3365f93f5d89aa85a5ab4"),
+  email: 'mahendrasahu1212@gmail.com',
+  products: [
+    {
+      product: new ObjectId("61b4d88580b9ad1420ec3161"),
+      count: 4,
+      _id: new ObjectId("61d3366093f5d89aa85a5ab5")
+    }
+  ],
+  updatedAt: 2022-01-03T17:46:08.004Z,
+  __v: 0
+}
+[info]: 2022-01-04T08:10:07.718Z respective cart data was deleted and now cart is {
+  _id: new ObjectId("61d3365f93f5d89aa85a5ab4"),
+  email: 'mahendrasahu1212@gmail.com',
+  products: [],
+  updatedAt: 2022-01-03T17:46:08.004Z,
+  __v: 0
+}
+[info]: 2022-01-04T08:10:07.722Z cart data saved in database

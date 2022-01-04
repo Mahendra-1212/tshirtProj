@@ -57,3 +57,44 @@ res.status(200).json({
 });
 
 });
+
+exports.deleteCartProd=bigpromise(async(req,res,next)=>{
+logger.info("deleteCartProd method product is called");
+const email=req.user.email;
+const productId=req.query.id;
+logger.info(`get information ${email} ${productId}`);
+let cartDt=await cartmodel.findOne({email});
+logger.info(`query findOne is called and get object ${cartDt}`);
+if(!cartDt){
+ return res.status(200).send("cart is empty");
+}
+cartDt.products.forEach(function(obj,index){
+    if(obj.product._id==productId){
+        cartDt.products.splice(index,1);
+    }
+});
+logger.info(`respective cart data was deleted and now cart is ${cartDt}`);
+const response=cartDt.save();
+logger.info(`cart data saved in database`);
+res.status(200).json({
+   status:"success",
+   response
+});
+       
+});
+
+exports.getAllCartData=bigpromise(async(req,res,next)=>{
+    logger.info("getAllCartData is called ");
+    const email=req.user.email;
+    logger.info(`get user information  ${email}`);
+    const cartDt=await cartmodel.findOne({email}).populate("products.product");
+    logger.info(`run findOne method for user and get Info ${cartDt}`);
+    if(!cartDt){
+        return res.status(200).send("empty!");
+    }
+    res.status(200).json({
+        status:"success",
+        cartDt
+    });
+
+});
